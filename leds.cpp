@@ -1,23 +1,22 @@
-#include <Arduino.h>
+#include "Arduino.h"
+#include "Leds.h"
 
-class Leds {
+Leds::Leds() {
+  FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, numLeds);
 
-  Leds() {
-    FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, numLeds);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5,5000);
+}
 
-    FastLED.setMaxPowerInVoltsAndMilliamps(5,5000);
-  }
-
-  void lightFromPCB() {
+Leds::lightFromPCB() {
     for(int i = 0; i < numLeds; i ++){
       leds[i] = CRGB::Red;
       //delay(6);
       FastLED.show();
       fadeToBlackBy(leds,numLeds,25);
     }
-  }
-  
-  void lightFromMid() {
+}
+
+Leds::lightFromMid() {
     for(int i = 0; i < numLeds; i ++){
       leds[numLeds/2 - i/2] = CRGB::Red;
       leds[numLeds/2 + i/2] = CRGB::Red;
@@ -25,17 +24,18 @@ class Leds {
       FastLED.show();
       fadeToBlackBy(leds,numLeds,25);
     }
-  }
-  void lightFromFarSide() {
+}
+  
+Leds::lightFromFarSide() {
     for(int i = 0; i < numLeds; i ++){
       leds[numLeds - i] = CRGB::Red;
       //delay(6);
       FastLED.show();
       fadeToBlackBy(leds,numLeds,25);
     }
-  }
+}
 
-  void update() {
+Leds::update() {
     switch(touchState){
     case 0:
       fadeToBlackBy(leds,numLeds,5);
@@ -55,5 +55,4 @@ class Leds {
       //delay(1000);
       break;
     }
-  }
 }
