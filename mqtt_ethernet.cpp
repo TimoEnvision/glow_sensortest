@@ -58,20 +58,6 @@ Adafruit_MQTT_Subscribe onoffbutton = Adafruit_MQTT_Subscribe(&mqtt, AIO_USERNAM
 
 /*************************** Sketch Code ************************************/
 
-void setup() {
-  Serial.begin(115200);
-
-  Serial.println(F("Adafruit MQTT demo"));
-
-  // Initialise the Client
-  Serial.print(F("\nInit the Client..."));
-  Ethernet.begin(mac, iotIP, dnsIP);
-  delay(1000); //give the ethernet a second to initialize
-  
-
-  mqtt.subscribe(&onoffbutton);
-}
-
 uint32_t x=0;
 
 void loop() {
