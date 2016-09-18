@@ -8,9 +8,6 @@ class Leds {
     Leds();
     void update(uint32_t touchState);
   private:
-    void lightFromPCB();
-    void lightFromMid();
-    void lightFromFarSide();
 };
 #endif
 
