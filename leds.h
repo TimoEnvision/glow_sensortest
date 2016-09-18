@@ -1,7 +1,8 @@
 #ifndef Leds_h
-#define Leds_H
+#define Leds_h
 
 #include <Arduino.h>
+
 class Leds {
   public:
     Leds();

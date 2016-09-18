@@ -1,6 +1,14 @@
 #include "Arduino.h"
 #include "Leds.h"
 
+#include "FastLED.h"
+
+#define numLeds 112// Data pin that led data will be written out over
+
+#define DATA_PIN 7// This is an array of leds.  One item for each led in your strip.
+
+CRGB leds[numLeds];
+
 Leds::Leds() {
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, numLeds);
 

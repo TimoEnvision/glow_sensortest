@@ -1,31 +1,27 @@
-#include "Sensors.h";
+#include "Sensors.h"
+#include "Leds.h"
+#include "MQTT_Ethernet.h"
 
-Sensors sensors;
+Sensors *sensors;
 
-Leds leds;
+Leds *leds;
 
-void setup() {
-  delay(2000);
-  
+MQTT_Ethernet *mqtt_ethernet;
+
+void setup() { 
   Serial.begin(921600);
-
-  Serial.println(F("Adafruit MQTT demo"));
 
   sensors = new Sensors();
 
   leds = new Leds();
 
-  // Initialise the Client
-  Serial.print(F("\nInit the Client..."));
-  Ethernet.begin(mac, iotIP, dnsIP);
-  delay(1000); //give the ethernet a second to initialize
-  
-
-  mqtt.subscribe(&onoffbutton);
+  mqtt_ethernet = new MQTT_Ethernet();
 }
 
 void loop() {
-  sensors.update();
+  sensors->update();
   
-  leds.update();
+  leds->update();
+
+  mqtt_ethernet->update();
 }
