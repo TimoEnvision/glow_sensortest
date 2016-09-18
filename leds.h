@@ -6,7 +6,7 @@
 class Leds {
   public:
     Leds();
-    void update();
+    void update(uint32_t touchState);
   private:
     void lightFromPCB();
     void lightFromMid();

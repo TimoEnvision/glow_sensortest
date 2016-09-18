@@ -19,9 +19,9 @@ void setup() {
 }
 
 void loop() {
-  sensors->update();
+  byte touchState = sensors->update();
   
-  leds->update();
+  leds->update(touchState);
 
-  mqtt_ethernet->update();
+  mqtt_ethernet->send_touchState(touchState);
 }

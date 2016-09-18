@@ -3,50 +3,50 @@
 
 #include "FastLED.h"
 
-#define numLeds 112// Data pin that led data will be written out over
+#define numLeds 10// Data pin that led data will be written out over
 
 #define DATA_PIN 7// This is an array of leds.  One item for each led in your strip.
 
-CRGB leds[numLeds];
+CRGB ledArray[numLeds];
 
 Leds::Leds() {
-  FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, numLeds);
+  FastLED.addLeds<WS2812B, DATA_PIN, GRB>(ledArray, numLeds);
 
   FastLED.setMaxPowerInVoltsAndMilliamps(5,5000);
 }
 
-Leds::lightFromPCB() {
+void Leds::lightFromPCB() {
     for(int i = 0; i < numLeds; i ++){
-      leds[i] = CRGB::Red;
+      ledArray[i] = CRGB::Red;
       //delay(6);
       FastLED.show();
-      fadeToBlackBy(leds,numLeds,25);
+      fadeToBlackBy(ledArray,numLeds,25);
     }
 }
 
-Leds::lightFromMid() {
+void Leds::lightFromMid() {
     for(int i = 0; i < numLeds; i ++){
-      leds[numLeds/2 - i/2] = CRGB::Red;
-      leds[numLeds/2 + i/2] = CRGB::Red;
+      ledArray[numLeds/2 - i/2] = CRGB::Red;
+      ledArray[numLeds/2 + i/2] = CRGB::Red;
       //delay(6);
       FastLED.show();
-      fadeToBlackBy(leds,numLeds,25);
+      fadeToBlackBy(ledArray,numLeds,25);
     }
 }
   
-Leds::lightFromFarSide() {
+void Leds::lightFromFarSide() {
     for(int i = 0; i < numLeds; i ++){
-      leds[numLeds - i] = CRGB::Red;
+      ledArray[numLeds - i] = CRGB::Red;
       //delay(6);
       FastLED.show();
-      fadeToBlackBy(leds,numLeds,25);
+      fadeToBlackBy(ledArray,numLeds,25);
     }
 }
 
-Leds::update() {
+void Leds::update(uint32_t touchState) {
     switch(touchState){
     case 0:
-      fadeToBlackBy(leds,numLeds,5);
+      fadeToBlackBy(ledArray,numLeds,5);
       FastLED.show();
       break;
     case 1:
