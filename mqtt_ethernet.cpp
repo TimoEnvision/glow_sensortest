@@ -58,12 +58,12 @@ void MQTT_Ethernet::send_touchState(byte touchState) {
   MQTT_connect();
 
   // Now we can publish stuff!
-  Serial.print(F("\nSending touchState "));
-  Serial.print(touchState);
-  Serial.print("...");
+  //Serial.print(F("\nSending touchState "));
+  //Serial.print(touchState);
+  //Serial.print("...");
   if (! touchstate_sender.publish((uint32_t)touchState)) {
     Serial.println(F("Failed"));
   } else {
-    Serial.println(F("OK!"));
+    //Serial.println(F("OK!"));
   }
 }

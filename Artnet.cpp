@@ -100,6 +100,7 @@ int bytecounter;
 
 Artnet::Artnet() {
   Udp.begin(localPort);
+  Serial.println(F("START ARTNET"));
 }
 
 void Artnet::receive_artnet(byte* rgb, int start_address, int number_of_channels) {
@@ -108,11 +109,15 @@ void Artnet::receive_artnet(byte* rgb, int start_address, int number_of_channels
   //FIXME: test/debug check
   if(packetSize>art_net_header_size && packetSize<=max_packet_size) {//check size to avoid unneeded checks
     //if(packetSize) {
+    
+    Serial.println(F("RCVD PKG!"));
 
     IPAddress remote = Udp.remoteIP();    
     remotePort = Udp.remotePort();
     Udp.read(packetBuffer,MAX_BUFFER_UDP);
   
+    Serial.println(packetBuffer);
+        
     //read header
     match_artnet=1;
     for (int i=0;i<7;i++) {
