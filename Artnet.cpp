@@ -58,12 +58,6 @@
 #define short_get_low_byte(x)  (LOW_BYTE & x)
 #define bytes_to_short(h,l) ( ((h << 8) & 0xff00) | (l & 0x00FF) );
 
-byte mac[] = {
-  0x90, 0xA2, 0xDA, 0x0D, 0x4C, 0x8C} 
-; //the mac adress in HEX of ethernet shield or uno shield board
-byte ip[] = {
-  169, 254, 255, 255}; // the IP adress of your device, that should be in same universe of the network you are using
-
 // the next two variables are set when a packet is received
 byte remoteIp[4];        // holds received packet's originating IP
 unsigned int remotePort; // holds received packet's originating port
@@ -75,10 +69,6 @@ byte SubnetID = {
 byte UniverseID = {
   0};
 short select_universe = ((SubnetID*16)+UniverseID);
-
-//customisation: edit this if you want for example read and copy only 4 or 6 channels from channel 12 or 48 or whatever.
-const int number_of_channels = 504; //up to 512 channels; using 168 right now for 1 tube (56 controllable leds, 56 * 3)
-const int start_address = 0; // 0 if you want to read from channel 1
 
 //buffers
 const int MAX_BUFFER_UDP = 768;
@@ -104,17 +94,15 @@ short Opcode = 0;
 
 EthernetUDP Udp;
 
-byte rgb[number_of_channels]; // buffer to hold values for all leds
 int rgbSerialIdx = 0; // index to keep track of serial inputs
 
 int bytecounter;
 
 Artnet::Artnet() {
-  Ethernet.begin(mac,ip);
   Udp.begin(localPort);
 }
 
-byte* Artnet::receive_artnet() {
+void Artnet::receive_artnet(byte* rgb, int start_address, int number_of_channels) {
   int packetSize = Udp.parsePacket();
  
   //FIXME: test/debug check
@@ -141,7 +129,7 @@ byte* Artnet::receive_artnet() {
       //is_artnet_version_1=packetBuffer[10]; 
       //is_artnet_version_2=packetBuffer[11];*/
 
-      //sequence of data, to avoid lost packets on routeurs
+      //sequence of data, to avoid lost packets on routers
       //seq_artnet=packetBuffer[12];*/
 
       //physical port of  dmx N°
@@ -179,7 +167,6 @@ byte* Artnet::receive_artnet() {
             }
           }
       }
-    }  //end of artnet sniffing
-    return rgb;
+    }
   }
 }

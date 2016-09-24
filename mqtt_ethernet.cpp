@@ -10,9 +10,6 @@
 #include <Dns.h>
 #include <Dhcp.h>
 
-byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
-IPAddress iotIP (192, 168, 1, 42);
-
 #define IO_SERVER      "192.168.1.3"
 #define IO_SERVERPORT  1883
 #define IO_USERNAME    "test"
@@ -31,8 +28,6 @@ Adafruit_MQTT_Publish touchstate_sender = Adafruit_MQTT_Publish(&mqtt,  "tripods
 MQTT_Ethernet::MQTT_Ethernet() {
   // Initialise the Client
   Serial.print(F("\nInit the Client..."));
-  Ethernet.begin(mac, iotIP);
-  delay(1000); //give the ethernet a second to initialize
 }
 
 // Function to connect and reconnect as necessary to the MQTT server.

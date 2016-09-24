@@ -6,7 +6,7 @@
 class Leds {
   public:
     Leds();
-    void update(uint32_t touchState);
+    void update(byte* touchState);
   private:
 };
 #endif

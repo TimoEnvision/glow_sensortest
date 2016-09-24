@@ -6,7 +6,7 @@
 class Artnet {
   public:
     Artnet();
-    byte* receive_artnet ();
+    void receive_artnet (byte*, int start_address, int number_of_channels);
   private:
     
 };
