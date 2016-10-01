@@ -2,22 +2,22 @@
 #include "Sensors.h"
 
 // antenna pins Slave 1
-int DIG11 =  3;   // PCB side antenna
-int DIG12 =  5;   // Far side antenna (start coax)
-int DIG13 = 23;   // PCB side antenna 2
-int DIG14 = 22;   // Far side antenna 2 (start coax)
+int slaveOnePcbSideAntenna =  3;   // PCB side antenna
+int slaveOneFarSideAntenna =  5;   // Far side antenna (start coax)
+int slaveOnePcbSideAntenna2 = 23;   // PCB side antenna 2
+int slaveOneFarSideAntenna2 = 22;   // Far side antenna 2 (start coax)
 
 // antenna pins Slave 2
-int DIG21 = 21;   // PCB side antenna
-int DIG22 = 19;   // Far side antenna (start coax)
-int DIG23 = 18;   // PCB side antenna 2
-int DIG24 = 24;   // Far side antenna 2 (start coax)
+int slaveTwoPcbSideAntenna = 21;   // PCB side antenna
+int slaveTwoFarSideAntenna = 19;   // Far side antenna (start coax)
+int slaveTwoPcbSideAntenna2 = 18;   // PCB side antenna 2
+int slaveTwoFarSideAntenna2 = 24;   // Far side antenna 2 (start coax)
 
 // antenna pins master PCB
-int DIG31 = 32;   // PCB side antenna
-int DIG32 = 31;   // Far side antenna (start coax)
-int DIG33 = 30;   // PCB side antenna 2
-int DIG34 = 29;   // Far side antenna 2 (start coax)
+int MasterPcbSideAntenna = 32;   // PCB side antenna
+int MasterFarSideAntenna = 31;   // Far side antenna (start coax)
+int MasterPcbSideAntenna2 = 30;   // PCB side antenna 2
+int MasterFarSideAntenna2 = 29;   // Far side antenna 2 (start coax)
 
 // antenna state
 boolean antennaState1;  // PCB side antenna
@@ -34,22 +34,23 @@ uint32_t touchState;
 
 Sensors::Sensors() {
     // configure atenna inputs
-    pinMode(DIG11, INPUT);           // set pin to input
-    pinMode(DIG12, INPUT);           // set pin to input
-    pinMode(DIG13, INPUT);           // set pin to input
-    pinMode(DIG14, INPUT);           // set pin to input
-    
-    digitalWrite(DIG11, HIGH);       // turn on pullup resistors
-    digitalWrite(DIG12, HIGH);       // turn on pullup resistors
-    digitalWrite(DIG13, HIGH);       // turn on pullup resistors
-    digitalWrite(DIG14, HIGH);       // turn on pullup resistors
+    // configure atenna inputs
+    pinMode(MasterPcbSideAntenna, INPUT);           // set pin to input
+    digitalWrite(MasterPcbSideAntenna, HIGH);       // turn on pullup resistors
+    pinMode(MasterFarSideAntenna, INPUT);           // set pin to input
+    digitalWrite(MasterFarSideAntenna, HIGH);       // turn on pullup resistors
+    pinMode(MasterPcbSideAntenna2, INPUT);           // set pin to input
+    digitalWrite(MasterPcbSideAntenna2, HIGH);       // turn on pullup resistors
+    pinMode(MasterFarSideAntenna2, INPUT);           // set pin to input
+    digitalWrite(MasterFarSideAntenna2, HIGH);       // turn on pullup resistors
 }
 
 void Sensors::readTouchInput() {
-  antennaState1 = 1 - digitalRead(DIG11);   // PCB side antenna
-  antennaState2 = 1 - digitalRead(DIG12);   // Far side antenna (start coax)
-  antennaState3 = 1 - digitalRead(DIG13);   // PCB side antenna 2
-  antennaState4 = 1 - digitalRead(DIG14);   // Far side antenna 2 (start coax)
+antennaState1 = 1 - digitalRead(MasterPcbSideAntenna);   // PCB side antenna
+antennaState2 = 1 - digitalRead(MasterFarSideAntenna);   // Far side antenna (start coax)
+antennaState3 = 1 - digitalRead(MasterPcbSideAntenna2);   // PCB side antenna 2
+antennaState4 = 1 - digitalRead(MasterFarSideAntenna2);   // Far side antenna 2 (start coax)
+
     
   if (antennaState1 || antennaState3) {
     touchState = 1;

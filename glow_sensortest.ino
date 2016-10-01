@@ -20,7 +20,7 @@ byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
 IPAddress iotIP (192, 168, 1, 42);
 
 void setup() { 
-  Serial.begin(921600);
+  Serial.begin(115200);
   
   Ethernet.begin(mac, iotIP);
   delay(1000); //give the ethernet a second to initialize
