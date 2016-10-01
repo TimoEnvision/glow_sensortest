@@ -17,10 +17,10 @@ MQTT_Ethernet *mqtt_ethernet;
 Artnet *artnet;
 
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
-IPAddress iotIP (192, 168, 1, 42);
+IPAddress iotIP (192, 168, 0, 150);
 
 void setup() { 
-  Serial.begin(921600);
+  Serial.begin(115200);
   
   Ethernet.begin(mac, iotIP);
   delay(1000); //give the ethernet a second to initialize
@@ -44,7 +44,7 @@ void loop() {
 
   mqtt_ethernet->send_touchState(touchState);
 
-  artnet->receive_artnet(rgb, start_address, number_of_channels);
+  //artnet->receive_artnet(rgb, start_address, number_of_channels);
 
-  leds->update(rgb);
+  //leds->update(rgb);
 }
