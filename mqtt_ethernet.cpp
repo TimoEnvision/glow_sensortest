@@ -10,7 +10,7 @@
 #include <Dns.h>
 #include <Dhcp.h>
 
-#define IO_SERVER      "192.168.1.3"
+#define IO_SERVER      "192.168.0.24"
 #define IO_SERVERPORT  1883
 #define IO_USERNAME    "test"
 #define IO_KEY         "test"
