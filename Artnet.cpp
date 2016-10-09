@@ -170,24 +170,22 @@ void Artnet::receive_artnet(byte* rgb, int start_address, int total_number_of_ch
           //if it is selected universe DMX will be read
           if(incoming_universe==first_universe) {
                 Serial.println(F("RCVD PKG UNIVERSE 1!"));
-
-/*
             //getting data from a channel position, on a precise amount of channels, this to avoid to much operation if you need only 4 channels for example
             //channel position
             for(int i = start_address; i < 512; i++) {
               //buffer_channel_arduino[i-start_address]= byte(packetBuffer[i+art_net_header_size+1]);
               rgb[i-start_address]= byte(packetBuffer[i+art_net_header_size+1]);
-            }  */
+            }  
           }
           else if(incoming_universe==second_universe) {
             Serial.println(F("RCVD PKG UNIVERSE 2!"));
-/*
+
             //getting data from a channel position, on a precise amount of channels, this to avoid to much operation if you need only 4 channels for example
             //channel position
             for(int i = start_address; i < total_number_of_channels-512; i++) {
               //buffer_channel_arduino[i-start_address]= byte(packetBuffer[i+art_net_header_size+1]);
               rgb[i-start_address+512]= byte(packetBuffer[i+art_net_header_size+1]);
-            } */
+            } 
           }
       }
     }
