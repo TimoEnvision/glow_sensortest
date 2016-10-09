@@ -64,27 +64,33 @@ unsigned int remotePort; // holds received packet's originating port
 
 //customisation: Artnet SubnetID + UniverseID
 //edit this with SubnetID + UniverseID you want to receive 
-byte SubnetID = {
+byte SubnetID1 = {
   0};
-byte UniverseID = {
+byte UniverseID1 = {
   0};
-short select_universe = ((SubnetID*16)+UniverseID);
+short first_universe = ((SubnetID1*16)+UniverseID1);
+
+byte SubnetID2 = {
+  0};
+byte UniverseID2 = {
+  1};
+short second_universe = ((SubnetID2*16)+UniverseID2);
 
 //buffers
 const int MAX_BUFFER_UDP = 768;
-char packetBuffer[MAX_BUFFER_UDP]; //buffer to store incoming data
+char packetBuffer[531]; //buffer to store incoming data
 //byte buffer_channel_arduino[number_of_channels]; //buffer to store filetered DMX data
 
 // art net parameters
 unsigned int localPort = 6454;      // artnet UDP port is by default 6454
 const int art_net_header_size = 17;
-const int max_packet_size = 576;
+const int max_packet_size = 530; //512 data + 18 byte header
 char ArtNetHead[8] = "Art-Net";
 char OpHbyteReceive = 0;
 char OpLbyteReceive = 0;
 //short is_artnet_version_1=0;
 //short is_artnet_version_2=0;
-//short seq_artnet=0;
+short seq_artnet=0;
 //short artnet_physical=0;
 short incoming_universe = 0;
 boolean is_opcode_is_dmx = 0;
@@ -103,7 +109,7 @@ Artnet::Artnet() {
   Serial.println(F("START ARTNET"));
 }
 
-void Artnet::receive_artnet(byte* rgb, int start_address, int number_of_channels) {
+void Artnet::receive_artnet(byte* rgb, int start_address, int total_number_of_channels) {
   int packetSize = Udp.parsePacket();
  
   //FIXME: test/debug check
@@ -114,9 +120,9 @@ void Artnet::receive_artnet(byte* rgb, int start_address, int number_of_channels
 
     IPAddress remote = Udp.remoteIP();    
     remotePort = Udp.remotePort();
-    Udp.read(packetBuffer,MAX_BUFFER_UDP);
+    Udp.read(packetBuffer,531);
   
-    Serial.println(packetBuffer);
+    //Serial.println(packetBuffer);
         
     //read header
     match_artnet=1;
@@ -135,7 +141,7 @@ void Artnet::receive_artnet(byte* rgb, int start_address, int number_of_channels
       //is_artnet_version_2=packetBuffer[11];*/
 
       //sequence of data, to avoid lost packets on routers
-      //seq_artnet=packetBuffer[12];*/
+      seq_artnet=packetBuffer[12];
 
       //physical port of  dmx N°
       //artnet_physical=packetBuffer[13];*/
@@ -162,14 +168,26 @@ void Artnet::receive_artnet(byte* rgb, int start_address, int number_of_channels
         //read incoming universe
         incoming_universe= bytes_to_short(packetBuffer[15],packetBuffer[14])
           //if it is selected universe DMX will be read
-          if(incoming_universe==select_universe) {
+          if(incoming_universe==first_universe) {
+                Serial.println(F("RCVD PKG UNIVERSE 1!"));
 
+/*
             //getting data from a channel position, on a precise amount of channels, this to avoid to much operation if you need only 4 channels for example
             //channel position
-            for(int i = start_address; i < number_of_channels; i++) {
+            for(int i = start_address; i < 512; i++) {
               //buffer_channel_arduino[i-start_address]= byte(packetBuffer[i+art_net_header_size+1]);
               rgb[i-start_address]= byte(packetBuffer[i+art_net_header_size+1]);
-            }
+            }  */
+          }
+          else if(incoming_universe==second_universe) {
+            Serial.println(F("RCVD PKG UNIVERSE 2!"));
+/*
+            //getting data from a channel position, on a precise amount of channels, this to avoid to much operation if you need only 4 channels for example
+            //channel position
+            for(int i = start_address; i < total_number_of_channels-512; i++) {
+              //buffer_channel_arduino[i-start_address]= byte(packetBuffer[i+art_net_header_size+1]);
+              rgb[i-start_address+512]= byte(packetBuffer[i+art_net_header_size+1]);
+            } */
           }
       }
     }

@@ -10,7 +10,7 @@
 #include <Dns.h>
 #include <Dhcp.h>
 
-#define IO_SERVER      "192.168.0.24"
+#define IO_SERVER      "192.168.1.3"
 #define IO_SERVERPORT  1883
 #define IO_USERNAME    "test"
 #define IO_KEY         "test"
@@ -61,9 +61,12 @@ void MQTT_Ethernet::send_touchState(byte touchState) {
   //Serial.print(F("\nSending touchState "));
   //Serial.print(touchState);
   //Serial.print("...");
-  if (! touchstate_sender.publish((uint32_t)touchState)) {
+
+  if (millis()%5000 == 0) {
+  if (!touchstate_sender.publish((uint32_t)touchState)) {
     Serial.println(F("Failed"));
   } else {
-    //Serial.println(F("OK!"));
+    Serial.println(F("OK!"));
+  }
   }
 }
