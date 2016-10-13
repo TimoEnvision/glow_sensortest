@@ -1,25 +1,7 @@
 #include "Arduino.h"
 #include "Artnet.h"
-
- /*  artnet to OctoWS2811 test
  
- OctoWS2811 Notes:
- 
- Required Connections
- --------------------
- pin 2:  LED Strip #1    OctoWS2811 drives 8 LED Strips.
- pin 14: LED strip #2    All 8 are the same length.
- pin 7:  LED strip #3
- pin 8:  LED strip #4    A 100 ohm resistor should used
- pin 6:  LED strip #5    between each Teensy pin and the
- pin 20: LED strip #6    wire to the LED strip, to minimize
- pin 21: LED strip #7    high frequency ringining & noise.
- pin 5:  LED strip #8
- pin 15 & 16 - Connect together, but do not use
- pin 4 - Do not use
- pin 3 - Do not use as PWM.  Normal use is ok.
- 
- Ethernet Notes:
+ /*Ethernet Notes:
  this was tested using a Wiz820io ethernet module. Standard SPI pin connections, as well as reset on Wiz820io to T3 pin 9
  
  Artnet Notes:
@@ -50,7 +32,7 @@
 #include <SPI.h>        
 #include <Ethernet.h>
 #include <EthernetUdp.h>
-#include "FastLED.h"
+//#include "FastLED.h"
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 // from Artnet Receiver Sketch
@@ -116,7 +98,7 @@ void Artnet::receive_artnet(byte* rgb, int start_address, int total_number_of_ch
   if(packetSize>art_net_header_size && packetSize<=max_packet_size) {//check size to avoid unneeded checks
     //if(packetSize) {
     
-    Serial.println(F("RCVD PKG!"));
+    //Serial.println(F("RCVD PKG!"));
 
     IPAddress remote = Udp.remoteIP();    
     remotePort = Udp.remotePort();
@@ -169,7 +151,7 @@ void Artnet::receive_artnet(byte* rgb, int start_address, int total_number_of_ch
         incoming_universe= bytes_to_short(packetBuffer[15],packetBuffer[14])
           //if it is selected universe DMX will be read
           if(incoming_universe==first_universe) {
-                Serial.println(F("RCVD PKG UNIVERSE 1!"));
+            //Serial.println(F("RCVD PKG UNIVERSE 1!"));
             //getting data from a channel position, on a precise amount of channels, this to avoid to much operation if you need only 4 channels for example
             //channel position
             for(int i = start_address; i < 512; i++) {
@@ -178,7 +160,7 @@ void Artnet::receive_artnet(byte* rgb, int start_address, int total_number_of_ch
             }  
           }
           else if(incoming_universe==second_universe) {
-            Serial.println(F("RCVD PKG UNIVERSE 2!"));
+            //Serial.println(F("RCVD PKG UNIVERSE 2!"));
 
             //getting data from a channel position, on a precise amount of channels, this to avoid to much operation if you need only 4 channels for example
             //channel position

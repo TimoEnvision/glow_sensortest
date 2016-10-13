@@ -12,8 +12,8 @@
 
 #define IO_SERVER      "192.168.1.3"
 #define IO_SERVERPORT  1883
-#define IO_USERNAME    "test"
-#define IO_KEY         "test"
+#define IO_USERNAME    "guest"
+#define IO_KEY         "guest"
 
 //Set up the ethernet client
 EthernetClient client;
@@ -62,11 +62,12 @@ void MQTT_Ethernet::send_touchState(byte touchState) {
   //Serial.print(touchState);
   //Serial.print("...");
 
-  if (millis()%5000 == 0) {
+//  if (millis()%2000 < 2) {
   if (!touchstate_sender.publish((uint32_t)touchState)) {
     Serial.println(F("Failed"));
   } else {
-    Serial.println(F("OK!"));
+    Serial.print(F("MQTT Send: "));
+    Serial.println(touchState);
   }
-  }
+//  }
 }

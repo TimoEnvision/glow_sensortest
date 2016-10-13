@@ -42,7 +42,9 @@ byte rgb[total_number_of_channels]; // buffer to hold values for all leds
 void loop() {
   byte touchState = sensors->update();
 
-  mqtt_ethernet->send_touchState(touchState);
+  if (touchState > 0) {
+    mqtt_ethernet->send_touchState(touchState);
+  }
 
   artnet->receive_artnet(rgb, start_address, total_number_of_channels);
 
