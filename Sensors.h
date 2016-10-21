@@ -13,8 +13,7 @@
 class Sensors {
   public:
     Sensors();
-    uint32_t update();
+    void read(boolean*);
   private:
-    void readTouchInput();
 };
 #endif

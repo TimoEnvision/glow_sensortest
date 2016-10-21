@@ -6,7 +6,7 @@
 class Leds {
   public:
     Leds();
-    void update(byte* touchState);  // @John shouldn't this be rgb / ledData / artnetValues or something?
+    void update(byte* artnetValues); 
   private:
 };
 #endif

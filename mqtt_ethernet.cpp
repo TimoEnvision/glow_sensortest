@@ -51,7 +51,7 @@ void MQTT_Ethernet::MQTT_connect() {
   Serial.println("MQTT Connected!");
 }
 
-void MQTT_Ethernet::send_touchState(byte touchState) {
+void MQTT_Ethernet::send_touchState(int tube, int side, uint32_t touchState) {
   // Ensure the connection to the MQTT server is alive (this will make the first
   // connection and automatically reconnect when disconnected).  See the MQTT_connect
   // function definition further below.
@@ -63,7 +63,7 @@ void MQTT_Ethernet::send_touchState(byte touchState) {
   //Serial.print("...");
 
 //  if (millis()%2000 < 2) {
-  if (!touchstate_sender.publish((uint32_t)touchState)) {
+  if (!touchstate_sender.publish(tube, side, touchState)) {
     Serial.println(F("Failed"));
   } else {
     Serial.print(F("MQTT Send: "));

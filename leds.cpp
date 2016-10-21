@@ -36,16 +36,13 @@ Leds::Leds() {
 
 void Leds::update(byte* artnetValues) {
     for (int w = 0; w < numLedsPerStrip; w += 1) {
-      ledArray[w]   = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]);
-      ledArray[w + numLedsPerStrip]   = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]);
+      ledArray[w] = ledArray[w + numLedsPerStrip]  = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]);
     }
     for (int w = (numLedsPerStrip * 2) - 1; w < numLedsPerStrip * 4; w += 1) {
-      ledArray[w]   = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]);
-      ledArray[w + numLedsPerStrip]   = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]);
+      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]);
     }
     for (int w = (numLedsPerStrip * 2) - 1; w < numLedsPerStrip * 6; w += 1) {
-      ledArray[w]   = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]);
-      ledArray[w + numLedsPerStrip]   = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]);
+      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]);
     }
     FastLED.show();
 }

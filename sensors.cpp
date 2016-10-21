@@ -2,6 +2,8 @@
 #include "Sensors.h"
 
 #define numAntennas 12
+#define pcbSide 0
+#define farSide 1
 
 // antenna pins Slave 1
 int slaveOnePcbSideAntenna =  3;   // PCB side antenna
@@ -23,15 +25,6 @@ int MasterFarSideAntenna2 = 29;   // Far side antenna 2 (start coax)
 
 boolean somethingHappened;
 boolean touchedAt[numAntennas];
-
-/* touchState indicates where the tube is touched
- * 0 is no touch 
- * 1 is PCB side
- * 2 is mid
- * 3 is far-side */
-uint32_t touchState;
-uint32_t previousTouchState;
-boolean newActiveState;
 
 Sensors::Sensors() {
     // configure all antenna pins as input
@@ -67,57 +60,36 @@ Sensors::Sensors() {
     digitalWrite(slaveTwoFarSideAntenna2, HIGH);
 }
 
-void Sensors::readTouchInput() {
-touchedAt[0] = 1 - digitalRead(MasterPcbSideAntenna);    // PCB side antenna
-touchedAt[1] = 1 - digitalRead(MasterPcbSideAntenna2); 
-touchedAt[2] = 1 - digitalRead(MasterFarSideAntenna);    // Far side antenna (start coax)
-touchedAt[3] = 1 - digitalRead(MasterFarSideAntenna2);
+void Sensors::read(boolean* touchReading) {
+  touchedAt[0] = 1 - digitalRead(MasterPcbSideAntenna);    // PCB side antenna
+  touchedAt[1] = 1 - digitalRead(MasterPcbSideAntenna2); 
+  touchedAt[2] = 1 - digitalRead(MasterFarSideAntenna);    // Far side antenna (start coax)
+  touchedAt[3] = 1 - digitalRead(MasterFarSideAntenna2);
 
-touchedAt[4] = 1 - digitalRead(slaveOnePcbSideAntenna);    // PCB side antenna
-touchedAt[5] = 1 - digitalRead(slaveOnePcbSideAntenna2);
-touchedAt[6] = 1 - digitalRead(slaveOneFarSideAntenna);    // Far side antenna (start coax)
-touchedAt[7] = 1 - digitalRead(slaveOneFarSideAntenna2);
+  touchedAt[4] = 1 - digitalRead(slaveOnePcbSideAntenna);    // PCB side antenna
+  touchedAt[5] = 1 - digitalRead(slaveOnePcbSideAntenna2);
+  touchedAt[6] = 1 - digitalRead(slaveOneFarSideAntenna);    // Far side antenna (start coax)
+  touchedAt[7] = 1 - digitalRead(slaveOneFarSideAntenna2);
 
-touchedAt[8] = 1 - digitalRead(slaveTwoPcbSideAntenna);    // PCB side antenna
-touchedAt[9] = 1 - digitalRead(slaveTwoPcbSideAntenna2);
-touchedAt[10] = 1 - digitalRead(slaveTwoPcbSideAntenna);   // Far side antenna (start coax)
-touchedAt[11] = 1 - digitalRead(slaveTwoFarSideAntenna2);
+  touchedAt[8] = 1 - digitalRead(slaveTwoPcbSideAntenna);    // PCB side antenna
+  touchedAt[9] = 1 - digitalRead(slaveTwoPcbSideAntenna2);
+  touchedAt[10] = 1 - digitalRead(slaveTwoPcbSideAntenna);   // Far side antenna (start coax)
+  touchedAt[11] = 1 - digitalRead(slaveTwoFarSideAntenna2);
 
-  for (int i = 0; i < numAntennas / 4; i++) {
-    if (touchedAt[0 + i * 4] || touchedAt[1 + i * 4]) {
-      touchState = 2 + i * 4;  // touch state 2 for master tube, 6 for slave1, 10 for slave2 
-      //Serial.print("tube" + i); Serial.println("PCB side touched");
+  for (int tube = 0; tube < numTubes; tube++) {
+    if (touchedAt[tube * 4] || touchedAt[1 + tube * 4]) {           // if touched at PCB side
+      touchState[tube][pcbSide] = true;
     }
-    else if (touchedAt[2 + i * 4] || touchedAt[3 + i * 4]) {
-//      if (touchState == 1) {
-//        touchState = 3 + i * 4; // touch state 3 for master tube, 7 for slave1, 11 for slave2 
-//        //Serial.print("tube" + i); Serial.println("mid touched");
-//      }
-//      else { 
-      touchState = 4 + i * 4;  // touch state 4 for master tube, 8 for slave1, 12 for slave2 
-        //Serial.print("tube" + i); Serial.println("far side touched");
-//      }
+    else {
+      touchState[tube][pcbSide] = false;
     }
-    else {                     // nobody touches
-      touchState = 1 + i * 4;  // touch state 1 for master tube, 5 for slave1, 9 for slave2 
+    if (touchedAt[2 + tube * 4] || touchedAt[3 + tube * 4]) {       // if touched at far side
+      touchState[tube][farSide] = true;
     }
-
-    /* TO DO:
-     *  Write something that determines if anything has happened
-     *  probably something like: 
-     *  
-     *  if (touchState == previousTouchState) {
-     *    touchState = 0;  // change touch state to 0, nothing will happen @John is dit handig?
-     *  }
-     */
+    else {                                                          // nobody touches
+      touchState[tube][farSide] = false;
+    }
   }
-  
-  touchState = 0; //
-}
-
-uint32_t Sensors::update() {
-  readTouchInput();
-  return touchState;
 }
 
 
