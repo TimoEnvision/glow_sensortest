@@ -60,7 +60,7 @@ Sensors::Sensors() {
     digitalWrite(slaveTwoFarSideAntenna2, HIGH);
 }
 
-void Sensors::read(boolean* touchReading) {
+void Sensors::read(boolean* touchData) {
   touchedAt[0] = 1 - digitalRead(MasterPcbSideAntenna);    // PCB side antenna
   touchedAt[1] = 1 - digitalRead(MasterPcbSideAntenna2); 
   touchedAt[2] = 1 - digitalRead(MasterFarSideAntenna);    // Far side antenna (start coax)
@@ -78,16 +78,16 @@ void Sensors::read(boolean* touchReading) {
 
   for (int tube = 0; tube < numTubes; tube++) {
     if (touchedAt[tube * 4] || touchedAt[1 + tube * 4]) {           // if touched at PCB side
-      touchState[tube][pcbSide] = true;
+      touchData[tube][pcbSide] = true;
     }
     else {
-      touchState[tube][pcbSide] = false;
+      touchData[tube][pcbSide] = false;
     }
     if (touchedAt[2 + tube * 4] || touchedAt[3 + tube * 4]) {       // if touched at far side
-      touchState[tube][farSide] = true;
+      touchData[tube][farSide] = true;
     }
     else {                                                          // nobody touches
-      touchState[tube][farSide] = false;
+      touchData[tube][farSide] = false;
     }
   }
 }

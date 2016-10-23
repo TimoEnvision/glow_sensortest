@@ -48,26 +48,26 @@ void setup() {
 const int total_number_of_channels = 1008; //1008 channels (112*3 controllable leds, 112 * 3 * 3)
 const int start_address = 0; // 0 if you want to read from channel 1
 byte rgb[total_number_of_channels]; // buffer to hold values for all leds
-boolean touchReading[numTubes][numTouchAreas];
+boolean touchData[numTubes][numTouchAreas];
 uint32_t currentTouchState[numTubes][numTouchAreas];
 
 void loop() {
 
   if(millis() != time) {  // If we have gone on to the next millisecond
-    sensors->read(touchReading);
+    sensors->read(touchData);
 
     for (int side; side < 2; side ++) {
       for (int tube; tube < numTubes; tube ++) {
-        if(touchReading[tube][side] == currentTouchState[tube][side] && counter > 0) {
+        if(touchData[tube][side] == currentTouchState[tube][side] && counter > 0) {
           counter--;
         }
-        if(touchReading[tube][side] != currentTouchState[tube][side]) {
+        if(touchData[tube][side] != currentTouchState[tube][side]) {
           counter++;
         }
         // If the Input has shown the same value for long enough let's switch it
         if(counter >= debounce_count) {
           counter = 0;
-          currentTouchState[tube][side] = (uint32_t)touchReading[tube][side];
+          currentTouchState[tube][side] = (uint32_t)touchData[tube][side];
           mqtt_ethernet->send_touchState(tube, side, currentTouchState[tube][side]);
         }
       }
