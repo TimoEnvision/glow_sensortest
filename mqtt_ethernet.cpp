@@ -15,6 +15,8 @@
 #define IO_USERNAME    "guest"
 #define IO_KEY         "guest"
 
+const char tripodNo = "0";
+
 //Set up the ethernet client
 EthernetClient client;
 
@@ -23,11 +25,18 @@ Adafruit_MQTT_Client mqtt(&client, IO_SERVER, IO_SERVERPORT, IO_USERNAME, IO_KEY
 // You don't need to change anything below this line!
 #define halt(s) { Serial.println(F( s )); while(1);  }
 
-Adafruit_MQTT_Publish touchstate_sender = Adafruit_MQTT_Publish(&mqtt,  "tripods/1/touchstate");
+Adafruit_MQTT_Publish touchstate_senders [3][2];
 
 MQTT_Ethernet::MQTT_Ethernet() {
   // Initialise the Client
   Serial.print(F("\nInit the Client..."));
+
+  touchstate_senders [0][0] = Adafruit_MQTT_Publish(&mqtt,  "tripods/"+tripodNo+"/tube/0/side/0");
+  touchstate_senders [0][1] = Adafruit_MQTT_Publish(&mqtt,  "tripods/"+tripodNo+"/tube/0/side/1");
+  touchstate_senders [1][0] = Adafruit_MQTT_Publish(&mqtt,  "tripods/"+tripodNo+"/tube/1/side/0");
+  touchstate_senders [1][1] = Adafruit_MQTT_Publish(&mqtt,  "tripods/"+tripodNo+"/tube/1/side/1");
+  touchstate_senders [2][0] = Adafruit_MQTT_Publish(&mqtt,  "tripods/"+tripodNo+"/tube/2/side/0");
+  touchstate_senders [2][1] = Adafruit_MQTT_Publish(&mqtt,  "tripods/"+tripodNo+"/tube/2/side/1");
 }
 
 // Function to connect and reconnect as necessary to the MQTT server.
@@ -51,7 +60,7 @@ void MQTT_Ethernet::MQTT_connect() {
   Serial.println("MQTT Connected!");
 }
 
-void MQTT_Ethernet::send_touchState(int tube, int side, uint32_t touchState) {
+void MQTT_Ethernet::send_touchState(int tube, int side, boolean touchState) {
   // Ensure the connection to the MQTT server is alive (this will make the first
   // connection and automatically reconnect when disconnected).  See the MQTT_connect
   // function definition further below.
@@ -63,7 +72,8 @@ void MQTT_Ethernet::send_touchState(int tube, int side, uint32_t touchState) {
   //Serial.print("...");
 
 //  if (millis()%2000 < 2) {
-  if (!touchstate_sender.publish(tube, side, touchState)) {
+  Adafruit_MQTT_Publish touchstate_sender = touchstate_senders [tube][side];
+  if (!touchstate_sender.publish((uint32_t)touchState)) {
     Serial.println(F("Failed"));
   } else {
     Serial.print(F("MQTT Send: "));

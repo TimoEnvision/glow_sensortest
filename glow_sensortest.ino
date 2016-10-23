@@ -49,7 +49,7 @@ const int total_number_of_channels = 1008; //1008 channels (112*3 controllable l
 const int start_address = 0; // 0 if you want to read from channel 1
 byte rgb[total_number_of_channels]; // buffer to hold values for all leds
 boolean touchData[numTubes][numTouchAreas];
-uint32_t currentTouchState[numTubes][numTouchAreas];
+boolean currentTouchState[numTubes][numTouchAreas];
 
 void loop() {
 
@@ -67,7 +67,7 @@ void loop() {
         // If the Input has shown the same value for long enough let's switch it
         if(counter >= debounce_count) {
           counter = 0;
-          currentTouchState[tube][side] = (uint32_t)touchData[tube][side];
+          currentTouchState[tube][side] = touchData[tube][side];
           mqtt_ethernet->send_touchState(tube, side, currentTouchState[tube][side]);
         }
       }

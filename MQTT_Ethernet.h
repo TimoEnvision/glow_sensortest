@@ -19,7 +19,7 @@
 class MQTT_Ethernet {
   public:
     MQTT_Ethernet();
-    void send_touchState(byte touchState);
+    void send_touchState(int tube, int side, boolean touchState);
   private:
     void MQTT_connect();
 };

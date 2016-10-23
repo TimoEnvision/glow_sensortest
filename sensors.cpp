@@ -23,9 +23,6 @@ int MasterFarSideAntenna = 31;   // Far side antenna (start coax)
 int MasterPcbSideAntenna2 = 30;   // PCB side antenna 2
 int MasterFarSideAntenna2 = 29;   // Far side antenna 2 (start coax)
 
-boolean somethingHappened;
-boolean touchedAt[numAntennas];
-
 Sensors::Sensors() {
     // configure all antenna pins as input
     pinMode(MasterPcbSideAntenna, INPUT);
@@ -60,36 +57,15 @@ Sensors::Sensors() {
     digitalWrite(slaveTwoFarSideAntenna2, HIGH);
 }
 
-void Sensors::read(boolean* touchData) {
-  touchedAt[0] = 1 - digitalRead(MasterPcbSideAntenna);    // PCB side antenna
-  touchedAt[1] = 1 - digitalRead(MasterPcbSideAntenna2); 
-  touchedAt[2] = 1 - digitalRead(MasterFarSideAntenna);    // Far side antenna (start coax)
-  touchedAt[3] = 1 - digitalRead(MasterFarSideAntenna2);
+void Sensors::read(byte* touchData) {
+  touchData[0][0] = !(bool)digitalRead(MasterPcbSideAntenna) || !(bool)digitalRead(MasterPcbSideAntenna2);    // PCB side antenna
+  touchData[0][1] = !(bool)digitalRead(MasterFarSideAntenna) || !(bool)digitalRead(MasterFarSideAntenna2);    // Far side antenna (start coax)
 
-  touchedAt[4] = 1 - digitalRead(slaveOnePcbSideAntenna);    // PCB side antenna
-  touchedAt[5] = 1 - digitalRead(slaveOnePcbSideAntenna2);
-  touchedAt[6] = 1 - digitalRead(slaveOneFarSideAntenna);    // Far side antenna (start coax)
-  touchedAt[7] = 1 - digitalRead(slaveOneFarSideAntenna2);
+  touchData[1][0] = !(bool)digitalRead(slaveOnePcbSideAntenna) || !(bool)digitalRead(slaveOnePcbSideAntenna2);    // PCB side antenna
+  touchData[1][1] = !(bool)digitalRead(slaveOneFarSideAntenna) || !(bool)digitalRead(slaveOneFarSideAntenna2);    // Far side antenna (start coax)
 
-  touchedAt[8] = 1 - digitalRead(slaveTwoPcbSideAntenna);    // PCB side antenna
-  touchedAt[9] = 1 - digitalRead(slaveTwoPcbSideAntenna2);
-  touchedAt[10] = 1 - digitalRead(slaveTwoPcbSideAntenna);   // Far side antenna (start coax)
-  touchedAt[11] = 1 - digitalRead(slaveTwoFarSideAntenna2);
-
-  for (int tube = 0; tube < numTubes; tube++) {
-    if (touchedAt[tube * 4] || touchedAt[1 + tube * 4]) {           // if touched at PCB side
-      touchData[tube][pcbSide] = true;
-    }
-    else {
-      touchData[tube][pcbSide] = false;
-    }
-    if (touchedAt[2 + tube * 4] || touchedAt[3 + tube * 4]) {       // if touched at far side
-      touchData[tube][farSide] = true;
-    }
-    else {                                                          // nobody touches
-      touchData[tube][farSide] = false;
-    }
-  }
+  touchData[2][0] = !(bool)digitalRead(slaveTwoPcbSideAntenna) || !(bool)digitalRead(slaveTwoPcbSideAntenna2);    // PCB side antenna
+  touchData[2][1] = !(bool)digitalRead(slaveTwoPcbSideAntenna) || !(bool)digitalRead(slaveTwoFarSideAntenna2);   // Far side antenna (start coax)
 }
 
 
