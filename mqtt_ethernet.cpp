@@ -15,7 +15,7 @@
 #define IO_USERNAME    "guest"
 #define IO_KEY         "guest"
 
-const char tripodNo = "0";
+const char tripodNo = '0';
 
 //Set up the ethernet client
 EthernetClient client;
@@ -25,18 +25,26 @@ Adafruit_MQTT_Client mqtt(&client, IO_SERVER, IO_SERVERPORT, IO_USERNAME, IO_KEY
 // You don't need to change anything below this line!
 #define halt(s) { Serial.println(F( s )); while(1);  }
 
-Adafruit_MQTT_Publish touchstate_senders [3][2];
+Adafruit_MQTT_Publish touchstate_senders[3][2] = {
+
+ {Adafruit_MQTT_Publish(&mqtt,  "tripods/0/tube/0/side/0"),  Adafruit_MQTT_Publish(&mqtt,  "tripods/0/tube/0/side/1") },
+
+ {Adafruit_MQTT_Publish(&mqtt,  "tripods/0/tube/1/side/0"),  Adafruit_MQTT_Publish(&mqtt,  "tripods/0/tube/1/side/1") },
+
+ {Adafruit_MQTT_Publish(&mqtt,  "tripods/0/tube/2/side/0"),  Adafruit_MQTT_Publish(&mqtt,  "tripods/0/tube/2/side/1") }
+
+};
 
 MQTT_Ethernet::MQTT_Ethernet() {
   // Initialise the Client
   Serial.print(F("\nInit the Client..."));
 
-  touchstate_senders [0][0] = Adafruit_MQTT_Publish(&mqtt,  "tripods/"+tripodNo+"/tube/0/side/0");
-  touchstate_senders [0][1] = Adafruit_MQTT_Publish(&mqtt,  "tripods/"+tripodNo+"/tube/0/side/1");
-  touchstate_senders [1][0] = Adafruit_MQTT_Publish(&mqtt,  "tripods/"+tripodNo+"/tube/1/side/0");
-  touchstate_senders [1][1] = Adafruit_MQTT_Publish(&mqtt,  "tripods/"+tripodNo+"/tube/1/side/1");
-  touchstate_senders [2][0] = Adafruit_MQTT_Publish(&mqtt,  "tripods/"+tripodNo+"/tube/2/side/0");
-  touchstate_senders [2][1] = Adafruit_MQTT_Publish(&mqtt,  "tripods/"+tripodNo+"/tube/2/side/1");
+//  touchstate_senders [0][0] = Adafruit_MQTT_Publish(&mqtt,  "tripods/0/tube/0/side/0");
+//  touchstate_senders [0][1] = Adafruit_MQTT_Publish(&mqtt,  "tripods/0/tube/0/side/1");
+//  touchstate_senders [1][0] = Adafruit_MQTT_Publish(&mqtt,  "tripods/0/tube/1/side/0");
+//  touchstate_senders [1][1] = Adafruit_MQTT_Publish(&mqtt,  "tripods/0/tube/1/side/1");
+//  touchstate_senders [2][0] = Adafruit_MQTT_Publish(&mqtt,  "tripods/0/tube/2/side/0");
+//  touchstate_senders [2][1] = Adafruit_MQTT_Publish(&mqtt,  "tripods/0/tube/2/side/1");
 }
 
 // Function to connect and reconnect as necessary to the MQTT server.

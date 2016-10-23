@@ -13,7 +13,7 @@
 class Sensors {
   public:
     Sensors();
-    void read(boolean[3][2]);
+    void read(boolean[][2]);
   private:
 };
 #endif
