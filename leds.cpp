@@ -23,7 +23,7 @@
 #include<FastLED.h>
 
 #define numLedsPerStrip 112
-#define numStrips 6
+#define numStrips 8
 #define numLeds numLedsPerStrip * numStrips
 
 CRGB ledArray[numLeds];

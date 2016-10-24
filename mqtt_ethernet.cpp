@@ -10,7 +10,7 @@
 #include <Dns.h>
 #include <Dhcp.h>
 
-#define IO_SERVER      "192.168.1.3"
+#define IO_SERVER      "10.0.0.1"
 #define IO_SERVERPORT  1883
 #define IO_USERNAME    "guest"
 #define IO_KEY         "guest"
@@ -51,12 +51,12 @@ MQTT_Ethernet::MQTT_Ethernet() {
 // Should be called in the loop function and it will take care if connecting.
 void MQTT_Ethernet::MQTT_connect() {
   int8_t ret;
-
+  
   // Stop if already connected.
   if (mqtt.connected()) {
     return;
   }
-
+  
   Serial.print("Connecting to MQTT... ");
 
   while ((ret = mqtt.connect()) != 0) { // connect will return 0 for connected
@@ -80,6 +80,7 @@ void MQTT_Ethernet::send_touchState(int tube, int side, boolean touchState) {
   //Serial.print("...");
 
 //  if (millis()%2000 < 2) {
+  Serial.println("tube = " + String(tube) + "  side = " + String(side));
   Adafruit_MQTT_Publish touchstate_sender = touchstate_senders [tube][side];
   if (!touchstate_sender.publish((uint32_t)touchState)) {
     Serial.println(F("Failed"));

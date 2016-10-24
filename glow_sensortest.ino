@@ -1,26 +1,23 @@
 #include "Sensors.h"
 #include "Leds.h"
-#include "MQTT_Ethernet.h"
 #include "Artnet.h"
+#include "MQTT_Ethernet.h"
 
 #include <Ethernet.h>
 #include <EthernetClient.h>
 #include <Dns.h>
 #include <Dhcp.h>
 
-#define numTubes 3
-#define numTouchAreas 2
-
 Sensors *sensors;
 
 Leds *leds;
 
-MQTT_Ethernet *mqtt_ethernet;
-
 Artnet *artnet;
 
+MQTT_Ethernet *mqtt_ethernet;
+
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
-IPAddress iotIP (192, 168, 1, 150);
+IPAddress iotIP (10,0,0,3); // tripod 0, first teensy
 
 int counter = 0;       // how many times we have seen new touchState
 
@@ -45,6 +42,8 @@ void setup() {
 } 
 
 //customisation: edit this if you want for example read and copy only 4 or 6 channels from channel 12 or 48 or whatever.
+const int numTubes = 3;
+const int numTouchAreas = 2;
 const int total_number_of_channels = 1008; //1008 channels (112*3 controllable leds, 112 * 3 * 3)
 const int start_address = 0; // 0 if you want to read from channel 1
 byte rgb[total_number_of_channels]; // buffer to hold values for all leds
@@ -55,9 +54,13 @@ void loop() {
 
   if(millis() != time) {  // If we have gone on to the next millisecond
     sensors->read(touchData);
-
-    for (int side; side < 2; side ++) {
-      for (int tube; tube < numTubes; tube ++) {
+//    Serial.println("touchData" + String(touchData[0][0]));
+//    Serial.println("currentTouchState" + String(currentTouchState[0][0]));
+//    Serial.println("tube = " + String(numTubes));
+//    Serial.println("sides = " + String(numTouchAreas));
+    
+    for (int tube = 0; tube < numTubes; tube ++) {
+      for (int side = 0; side < numTouchAreas; side ++) {
         if(touchData[tube][side] == currentTouchState[tube][side] && counter > 0) {
           counter--;
         }
@@ -68,7 +71,7 @@ void loop() {
         if(counter >= debounce_count) {
           counter = 0;
           currentTouchState[tube][side] = touchData[tube][side];
-          mqtt_ethernet->send_touchState(tube, side, currentTouchState[tube][side]);
+          mqtt_ethernet->send_touchState(tube, side, touchData[tube][side]);
         }
       }
     }

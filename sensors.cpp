@@ -57,10 +57,11 @@ Sensors::Sensors() {
     digitalWrite(slaveTwoFarSideAntenna2, HIGH);
 }
 
-void Sensors::read(boolean touchData[][2]) {
+void Sensors::read(boolean touchData[][2]) {  // if not working, try to erase 3
   touchData[0][0] = !(bool)digitalRead(MasterPcbSideAntenna) || !(bool)digitalRead(MasterPcbSideAntenna2);    // PCB side antenna
   touchData[0][1] = !(bool)digitalRead(MasterFarSideAntenna) || !(bool)digitalRead(MasterFarSideAntenna2);    // Far side antenna (start coax)
-
+  //Serial.println(touchData[0][0]);
+  
   touchData[1][0] = !(bool)digitalRead(slaveOnePcbSideAntenna) || !(bool)digitalRead(slaveOnePcbSideAntenna2);    // PCB side antenna
   touchData[1][1] = !(bool)digitalRead(slaveOneFarSideAntenna) || !(bool)digitalRead(slaveOneFarSideAntenna2);    // Far side antenna (start coax)
 
