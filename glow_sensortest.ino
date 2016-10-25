@@ -19,13 +19,6 @@ MQTT_Ethernet *mqtt_ethernet;
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
 IPAddress iotIP (10,0,0,3); // tripod 0, first teensy
 
-int counter = 0;       // how many times we have seen new touchState
-
-// the following variable is a long because the time, measured in milliseconds,
-// will quickly become a bigger number than can be stored in an int.
-unsigned long time = 0;         // the last time the output pin was sampled
-int debounce_count = 4; // number of millis/samples to consider before declaring a debounced input
-
 void setup() { 
   Serial.begin(115200);
   
@@ -47,29 +40,40 @@ const int numTouchAreas = 2;
 const int total_number_of_channels = 1008; //1008 channels (112*3 controllable leds, 112 * 3 * 3)
 const int start_address = 0; // 0 if you want to read from channel 1
 byte rgb[total_number_of_channels]; // buffer to hold values for all leds
+
 boolean touchData[numTubes][numTouchAreas];
 boolean currentTouchState[numTubes][numTouchAreas];
+int counter[numTubes][numTouchAreas];       // how many times we have seen new touchState
+
+// the following variable is a long because the time, measured in milliseconds,
+// will quickly become a bigger number than can be stored in an int.
+unsigned long time = 0;         // the last time the output pin was sampled
+int debounce_count = 2; // number of millis/samples to consider before declaring a debounced input
 
 void loop() {
 
   if(millis() != time) {  // If we have gone on to the next millisecond
     sensors->read(touchData);
-//    Serial.println("touchData" + String(touchData[0][0]));
-//    Serial.println("currentTouchState" + String(currentTouchState[0][0]));
+    //Serial.println("tD " + String(touchData[0][0]) + "   cTS" + String(currentTouchState[0][0]) + "   counter" + String(counter[0][0]));
+    //Serial.println("cTS" + String(currentTouchState[0][1]));
 //    Serial.println("tube = " + String(numTubes));
 //    Serial.println("sides = " + String(numTouchAreas));
     
     for (int tube = 0; tube < numTubes; tube ++) {
       for (int side = 0; side < numTouchAreas; side ++) {
-        if(touchData[tube][side] == currentTouchState[tube][side] && counter > 0) {
-          counter--;
-        }
+//        if(touchData[tube][side] == currentTouchState[tube][side] && counter[tube][side] > 0) {
+//          counter[tube][side]--;
+//          //Serial.println("no change");
+//        }
         if(touchData[tube][side] != currentTouchState[tube][side]) {
-          counter++;
+          //counter[tube][side]++;
+          currentTouchState[tube][side] = touchData[tube][side];
+          mqtt_ethernet->send_touchState(tube, side, touchData[tube][side]);
+          //Serial.println("change");
         }
         // If the Input has shown the same value for long enough let's switch it
-        if(counter >= debounce_count) {
-          counter = 0;
+        if(counter[tube][side] >= debounce_count) {
+          counter[tube][side] = 0;
           currentTouchState[tube][side] = touchData[tube][side];
           mqtt_ethernet->send_touchState(tube, side, touchData[tube][side]);
         }

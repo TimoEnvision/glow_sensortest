@@ -58,8 +58,8 @@ Sensors::Sensors() {
 }
 
 void Sensors::read(boolean touchData[][2]) {  // if not working, try to erase 3
-  touchData[0][0] = !(bool)digitalRead(MasterPcbSideAntenna) || !(bool)digitalRead(MasterPcbSideAntenna2);    // PCB side antenna
-  touchData[0][1] = !(bool)digitalRead(MasterFarSideAntenna) || !(bool)digitalRead(MasterFarSideAntenna2);    // Far side antenna (start coax)
+  touchData[0][0] = !(bool)digitalRead(MasterPcbSideAntenna) || !(bool)digitalRead(MasterPcbSideAntenna2);    // PCB side antenna s1, s3
+  touchData[0][1] = !(bool)digitalRead(MasterFarSideAntenna) || !(bool)digitalRead(MasterFarSideAntenna2);    // Far side antenna (start coax) s4, s2
   //Serial.println(touchData[0][0]);
   
   touchData[1][0] = !(bool)digitalRead(slaveOnePcbSideAntenna) || !(bool)digitalRead(slaveOnePcbSideAntenna2);    // PCB side antenna
