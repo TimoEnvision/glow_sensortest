@@ -1,6 +1,17 @@
 #include "Arduino.h"
 #include "Artnet.h"
- 
+
+/* -----Configuration::------------------- */
+/* --------------------------------------- */
+byte UniverseID1 = { // TODO: teensy index (0 based)
+  2};
+
+byte UniverseID2 = { // TODO: teensy index (0 based) + 1
+  3};
+/* --------------------------------------- */
+/* -NEXT CHANGE IN FILE mqtt_ethernet.cpp- */
+
+
  /*Ethernet Notes:
  this was tested using a Wiz820io ethernet module. Standard SPI pin connections, as well as reset on Wiz820io to T3 pin 9
  
@@ -43,14 +54,6 @@
 // the next two variables are set when a packet is received
 byte remoteIp[4];        // holds received packet's originating IP
 unsigned int remotePort; // holds received packet's originating port
-
-//customisation: Artnet SubnetID + UniverseID
-//edit this with SubnetID + UniverseID you want to receive 
-byte UniverseID1 = { // TODO: teensy index (0 based)
-  0};
-
-byte UniverseID2 = { // TODO: teensy index (0 based) + 1
-  1};
 
   
 short first_universe = UniverseID1;

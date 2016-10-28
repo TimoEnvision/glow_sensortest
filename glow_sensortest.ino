@@ -8,6 +8,13 @@
 #include <Dns.h>
 #include <Dhcp.h>
 
+/* -----Configuration::------------ */
+/* -------------------------------- */
+IPAddress iotIP (10,0,0,4);  // TODO: last octet should be teensy index (0 based) + 3
+/* -------------------------------- */
+/* -NEXT CHANGE IN FILE Artnet.cpp- */
+
+
 Sensors *sensors;
 
 Leds *leds;
@@ -17,7 +24,6 @@ Artnet *artnet;
 MQTT_Ethernet *mqtt_ethernet;
 
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
-IPAddress iotIP (10,0,0,3);  // TODO: last octet should be teensy index (0 based) + 3
 
 void setup() { 
   Serial.begin(115200);
