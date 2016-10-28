@@ -46,17 +46,15 @@ unsigned int remotePort; // holds received packet's originating port
 
 //customisation: Artnet SubnetID + UniverseID
 //edit this with SubnetID + UniverseID you want to receive 
-byte SubnetID1 = {
+byte UniverseID1 = { // TODO: teensy index (0 based)
   0};
-byte UniverseID1 = {
-  0};
-short first_universe = ((SubnetID1*16)+UniverseID1);
 
-byte SubnetID2 = {
-  0};
-byte UniverseID2 = {
+byte UniverseID2 = { // TODO: teensy index (0 based) + 1
   1};
-short second_universe = ((SubnetID2*16)+UniverseID2);
+
+  
+short first_universe = UniverseID1;
+short second_universe = UniverseID1+1;
 
 //buffers
 const int MAX_BUFFER_UDP = 768;
