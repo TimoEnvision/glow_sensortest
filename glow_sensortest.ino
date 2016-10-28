@@ -10,7 +10,7 @@
 
 /* -----Configuration::------------ */
 /* -------------------------------- */
-IPAddress iotIP (10,0,0,4);  // TODO: last octet should be teensy index (0 based) + 3
+IPAddress iotIP (10,0,0,$lastOctet);  // TODO: last octet should be teensy index (0 based) + 3
 /* -------------------------------- */
 /* -NEXT CHANGE IN FILE Artnet.cpp- */
 

@@ -4,10 +4,10 @@
 /* -----Configuration::------------------- */
 /* --------------------------------------- */
 byte UniverseID1 = { // TODO: teensy index (0 based)
-  2};
+  $universe1};
 
 byte UniverseID2 = { // TODO: teensy index (0 based) + 1
-  3};
+  $universe2};
 /* --------------------------------------- */
 /* -NEXT CHANGE IN FILE mqtt_ethernet.cpp- */
 

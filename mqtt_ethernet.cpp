@@ -8,7 +8,7 @@
 
 /* -----Configuration::------------ */
 /* -------------------------------- */
-const char tripodNo = '1'; // TODO: change this to the tripod/teensy number (zero based)
+const char tripodNo = '$tripodNo'; // TODO: change this to the tripod/teensy number (zero based)
 /* -------------------------------- */
 /* -----ALL DONE---NOW UPLOAD------ */
 
