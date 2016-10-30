@@ -5,6 +5,14 @@
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
 
+
+/* -----Configuration::------------ */
+/* -------------------------------- */
+const char tripodNo = '0'; // TODO: change this to the tripod/teensy number (zero based)
+/* -------------------------------- */
+/* -----ALL DONE---NOW UPLOAD------ */
+
+
 #include <Ethernet.h>
 #include <EthernetClient.h>
 #include <Dns.h>
@@ -15,7 +23,6 @@
 #define IO_USERNAME    "guest"
 #define IO_KEY         "guest"
 
-const char tripodNo = '0';
 
 //Set up the ethernet client
 EthernetClient client;

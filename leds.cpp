@@ -23,26 +23,43 @@
 #include<FastLED.h>
 
 #define numLedsPerStrip 112
-#define numStrips 8
+#define numStrips 6
 #define numLeds numLedsPerStrip * numStrips
 
 CRGB ledArray[numLeds];
 
 Leds::Leds() {
-  LEDS.addLeds<OCTOWS2811>(ledArray, numLeds);
+  LEDS.addLeds<OCTOWS2811>(ledArray, numLedsPerStrip);
 
   FastLED.setMaxPowerInVoltsAndMilliamps(5,5700);
+
+  for (int w = 0; w < numLeds; w += 1) {
+    ledArray[w] = ledArray[w]  = CRGB::White;
+    FastLED.show();
+    ledArray[w] = ledArray[w]  = CRGB::Black;
+  }
 }
 
 void Leds::update(byte* artnetValues) {
-    for (int w = 0; w < numLedsPerStrip; w += 1) {
-      ledArray[w] = ledArray[w + numLedsPerStrip]  = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]);
+//  for (int w = 0; w < 50; w ++) {
+//    Serial.print(artnetValues[w*20+8] + 100);
+//  }
+//  Serial.println("-");
+
+    for (int w = 0; w < numLedsPerStrip; w ++) {                                                                             // loop 0 - 111
+      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]); // read artnetValues 0 - 335
     }
-    for (int w = (numLedsPerStrip * 2) - 1; w < numLedsPerStrip * 4; w += 1) {
-      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]);
+    int counter = 113;
+    for (int w = (numLedsPerStrip * 2) - 1; w < numLedsPerStrip * 3; w ++) {                                                 // loop 223 - 335
+      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w + counter],    artnetValues[w + counter + 1],    artnetValues[w + counter + 2]); // read artnetValues 336 - 673
+      //Serial.print(ledArray[(numLedsPerStrip * 2) - 1]);
+      counter += 2;
     }
-    for (int w = (numLedsPerStrip * 2) - 1; w < numLedsPerStrip * 6; w += 1) {
-      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]);
+    counter = 226;
+    for (int w = (numLedsPerStrip * 4) - 1; w < numLedsPerStrip * 5; w ++) {                                                         // loop 447 - 559
+      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w + counter],    artnetValues[w + counter + 1],    artnetValues[w + counter + 2]); // read artnetValues 673 - 1008
+      counter += 2;
     }
+    Serial.println("-");
     FastLED.show();
 }

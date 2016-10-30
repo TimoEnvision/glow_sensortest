@@ -1,6 +1,17 @@
 #include "Arduino.h"
 #include "Artnet.h"
- 
+
+/* -----Configuration::------------------- */
+/* --------------------------------------- */
+byte UniverseID1 = { // TODO: teensy index (0 based)
+  0};
+
+byte UniverseID2 = { // TODO: teensy index (0 based) + 1
+  1};
+/* --------------------------------------- */
+/* -NEXT CHANGE IN FILE mqtt_ethernet.cpp- */
+
+
  /*Ethernet Notes:
  this was tested using a Wiz820io ethernet module. Standard SPI pin connections, as well as reset on Wiz820io to T3 pin 9
  
@@ -44,19 +55,9 @@
 byte remoteIp[4];        // holds received packet's originating IP
 unsigned int remotePort; // holds received packet's originating port
 
-//customisation: Artnet SubnetID + UniverseID
-//edit this with SubnetID + UniverseID you want to receive 
-byte SubnetID1 = {
-  0};
-byte UniverseID1 = {
-  0};
-short first_universe = ((SubnetID1*16)+UniverseID1);
-
-byte SubnetID2 = {
-  0};
-byte UniverseID2 = {
-  1};
-short second_universe = ((SubnetID2*16)+UniverseID2);
+  
+short first_universe = UniverseID1;
+short second_universe = UniverseID2;
 
 //buffers
 const int MAX_BUFFER_UDP = 768;
@@ -157,7 +158,8 @@ void Artnet::receive_artnet(byte* rgb, int start_address, int total_number_of_ch
             for(int i = start_address; i < 512; i++) {
               //buffer_channel_arduino[i-start_address]= byte(packetBuffer[i+art_net_header_size+1]);
               rgb[i-start_address]= byte(packetBuffer[i+art_net_header_size+1]);
-            }  
+            }
+            Serial.print(rgb[511]
           }
           else if(incoming_universe==second_universe) {
             //Serial.println(F("RCVD PKG UNIVERSE 2!"));
@@ -167,7 +169,8 @@ void Artnet::receive_artnet(byte* rgb, int start_address, int total_number_of_ch
             for(int i = start_address; i < total_number_of_channels-512; i++) {
               //buffer_channel_arduino[i-start_address]= byte(packetBuffer[i+art_net_header_size+1]);
               rgb[i-start_address+512]= byte(packetBuffer[i+art_net_header_size+1]);
-            } 
+            }
+            Serial.println(rgb[start_address+512]);
           }
       }
     }
