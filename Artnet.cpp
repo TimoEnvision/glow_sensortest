@@ -159,7 +159,7 @@ void Artnet::receive_artnet(byte* rgb, int start_address, int total_number_of_ch
               //buffer_channel_arduino[i-start_address]= byte(packetBuffer[i+art_net_header_size+1]);
               rgb[i-start_address]= byte(packetBuffer[i+art_net_header_size+1]);
             }
-            Serial.print(rgb[511]
+            //Serial.print(rgb[511]
           }
           else if(incoming_universe==second_universe) {
             //Serial.println(F("RCVD PKG UNIVERSE 2!"));
@@ -169,8 +169,7 @@ void Artnet::receive_artnet(byte* rgb, int start_address, int total_number_of_ch
             for(int i = start_address; i < total_number_of_channels-512; i++) {
               //buffer_channel_arduino[i-start_address]= byte(packetBuffer[i+art_net_header_size+1]);
               rgb[i-start_address+512]= byte(packetBuffer[i+art_net_header_size+1]);
-            }
-            Serial.println(rgb[start_address+512]);
+            }            
           }
       }
     }

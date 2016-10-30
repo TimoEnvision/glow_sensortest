@@ -58,34 +58,23 @@ int debounce_count = 2; // number of millis/samples to consider before declaring
 
 void loop() {
 
-//  if(millis() != time) {  // If we have gone on to the next millisecond
-//    sensors->read(touchData);
-//    //Serial.println("tD " + String(touchData[0][0]) + "   cTS" + String(currentTouchState[0][0]) + "   counter" + String(counter[0][0]));
-//    //Serial.println("cTS" + String(currentTouchState[0][1]));
-////    Serial.println("tube = " + String(numTubes));
-////    Serial.println("sides = " + String(numTouchAreas));
-//    
-//    for (int tube = 0; tube < numTubes; tube ++) {
-//      for (int side = 0; side < numTouchAreas; side ++) {
-////        if(touchData[tube][side] == currentTouchState[tube][side] && counter[tube][side] > 0) {
-////          counter[tube][side]--;
-////          //Serial.println("no change");
-////        }
-//        if(touchData[tube][side] != currentTouchState[tube][side]) {
-//          //counter[tube][side]++;
-//          currentTouchState[tube][side] = touchData[tube][side];
-//          //mqtt_ethernet->send_touchState(tube, side, touchData[tube][side]);
-//        }
-//        // If the Input has shown the same value for long enough let's switch it
-//        if(counter[tube][side] >= debounce_count) {
-//          counter[tube][side] = 0;
-//          currentTouchState[tube][side] = touchData[tube][side];
-//          mqtt_ethernet->send_touchState(tube, side, touchData[tube][side]);
-//        }
-//      }
-//    }
-//    time = millis();
-//  }
+  if(millis() != time) {  // If we have gone on to the next millisecond
+    sensors->read(touchData);
+//    Serial.println("tD " + String(touchData[0][0]) + "   cTS" + String(currentTouchState[0][0]) + "   counter" + String(counter[0][0]));
+//    Serial.println("cTS" + String(currentTouchState[0][1]));
+//    Serial.println("tube = " + String(numTubes));
+//    Serial.println("sides = " + String(numTouchAreas));
+    
+    for (int tube = 0; tube < numTubes; tube ++) {
+      for (int side = 0; side < numTouchAreas; side ++) {
+        if(touchData[tube][side] != currentTouchState[tube][side]) {
+          currentTouchState[tube][side] = touchData[tube][side];
+          mqtt_ethernet->send_touchState(tube, side, touchData[tube][side]);
+        }
+      }
+    }
+    time = millis();
+  }
 
   artnet->receive_artnet(rgb, start_address, total_number_of_channels);
 

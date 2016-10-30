@@ -18,18 +18,20 @@
  pin 4 - Do not use
  pin 3 - Do not use as PWM.  Normal use is ok.*/
 
-#define USE_OCTOWS2811
-#include<OctoWS2811.h>
+//#define USE_OCTOWS2811
+//#include<OctoWS2811.h>
 #include<FastLED.h>
 
 #define numLedsPerStrip 112
-#define numStrips 6
+#define numStrips 3
 #define numLeds numLedsPerStrip * numStrips
 
 CRGB ledArray[numLeds];
 
 Leds::Leds() {
-  LEDS.addLeds<OCTOWS2811>(ledArray, numLedsPerStrip);
+  FastLED.addLeds<WS2812B, 2, GRB>(ledArray, 0, numLedsPerStrip - 1);
+  FastLED.addLeds<WS2812B, 7, GRB>(ledArray, numLedsPerStrip, numLedsPerStrip * 2 - 1);
+  FastLED.addLeds<WS2812B, 6, GRB>(ledArray, numLedsPerStrip * 2, numLedsPerStrip * 3 - 1);
 
   FastLED.setMaxPowerInVoltsAndMilliamps(5,5700);
 
@@ -41,25 +43,35 @@ Leds::Leds() {
 }
 
 void Leds::update(byte* artnetValues) {
-//  for (int w = 0; w < 50; w ++) {
-//    Serial.print(artnetValues[w*20+8] + 100);
-//  }
-//  Serial.println("-");
+  for (int w = 0; w < 171; w ++) {
+    ledArray[w] = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]);
+  }
+  for (int w = 170; w < numLedsPerStrip * 2; w ++) {
+    ledArray[w] = CRGB(artnetValues[w*3+2],    artnetValues[w*3+3],    artnetValues[w*3+4]);
+  }
+  for (int w = numLedsPerStrip * 2; w < numLedsPerStrip * 3; w ++) {                      //loop 224
+    ledArray[w] = CRGB(artnetValues[w*3+1],    artnetValues[w*3+2],    artnetValues[w*3+3]);
+  }
 
-    for (int w = 0; w < numLedsPerStrip; w ++) {                                                                             // loop 0 - 111
-      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]); // read artnetValues 0 - 335
-    }
-    int counter = 113;
-    for (int w = (numLedsPerStrip * 2) - 1; w < numLedsPerStrip * 3; w ++) {                                                 // loop 223 - 335
-      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w + counter],    artnetValues[w + counter + 1],    artnetValues[w + counter + 2]); // read artnetValues 336 - 673
-      //Serial.print(ledArray[(numLedsPerStrip * 2) - 1]);
-      counter += 2;
-    }
-    counter = 226;
-    for (int w = (numLedsPerStrip * 4) - 1; w < numLedsPerStrip * 5; w ++) {                                                         // loop 447 - 559
-      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w + counter],    artnetValues[w + counter + 1],    artnetValues[w + counter + 2]); // read artnetValues 673 - 1008
-      counter += 2;
-    }
-    Serial.println("-");
+//    for (int w = 0; w < numLedsPerStrip; w ++) {                                                                             // loop 0 - 111
+//      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w*3],    artnetValues[w*3+1],    artnetValues[w*3+2]); // read artnetValues 0 - 335
+//    }
+//    int counter = 112;
+//    for (int w = numLedsPerStrip * 2; w < numLedsPerStrip * 2 + 58; w ++) {                                                                              // loop 224 - 281 (58 leds)
+//      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w + counter],    artnetValues[w + counter + 1],    artnetValues[w + counter + 2]); // read artnetValues 337 - 509
+//      counter += 2;
+//    }
+//    counter = 230;
+//    for (int w = numLedsPerStrip * 2 + 58; w < numLedsPerStrip * 3; w ++) {                                                                              // loop 282 - 335 (54 leds)
+//      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w + counter],    artnetValues[w + counter + 1],    artnetValues[w + counter + 2]); // read artnetValues 511 - 673
+//      counter += 2;
+//    }
+//    counter = 228;
+//    for (int w = numLedsPerStrip * 4; w < numLedsPerStrip * 5; w ++) {                                                         // loop 446 - 559
+//      ledArray[w] = ledArray[w + numLedsPerStrip] = CRGB(artnetValues[w + counter],    artnetValues[w + counter + 1],    artnetValues[w + counter + 2]); // read artnetValues 674 - 1009\
+//      Serial.print(w);
+//      counter += 2;
+//    }
     FastLED.show();
 }
+
